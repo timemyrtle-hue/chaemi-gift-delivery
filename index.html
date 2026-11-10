@@ -200,7 +200,6 @@ label.small { font-family: var(--display); font-size: 15px; }
 .alldone .tn { font-family: var(--display); font-size: 22px; color: var(--red); margin-top: 4px; }
 .alldone p { margin: 4px 0 0; font-size: 14px; }
 .center.note, .note.center { text-align: center; }
-.note.credit { margin-top: 14px; font-size: 11px; line-height: 1.5; word-break: keep-all; }
 .mytype { display: flex; align-items: center; gap: 12px; background: #fff; border: 2.5px solid var(--line); border-radius: 16px; padding: 10px 12px; box-shadow: 0 3px 0 var(--line); }
 .mytype img { width: 92px; height: 92px; object-fit: contain; flex: none; }
 .mytype .tn { font-family: var(--display); font-size: 24px; color: var(--red); line-height: 1.2; margin: 2px 0 6px; }
@@ -1281,8 +1280,7 @@ function book(tab = 'sticker') {
   sheet.innerHTML = `<div class="paper"><button class="closex" id="bx" aria-label="닫기">✕</button>
     <h2 style="margin-top:2px">${UI_BOOK} 채미 도감</h2>
     <div class="tabs"><button id="tS" aria-pressed="${tab === 'sticker'}">스티커 ${S.have.length}/${STICKERS.length}</button><button id="tL" aria-pressed="${tab === 'log'}">배달 일지 ${S.logs.length}</button></div>
-    ${body}
-    <p class="note center credit">캐릭터 채미 © 경상북도교육청 외동도서관 · 책 표지의 저작권은 각 출판사·저작권자에게 있어요 · 글꼴 Jua, Gowun Dodum (SIL OFL 1.1)</p></div>`;
+    ${body}</div>`;
   $('#bx').onclick = back;
   $('#tS').onclick = () => { S.step = prevStep; book('sticker'); };
   $('#tL').onclick = () => { S.step = prevStep; book('log'); };
