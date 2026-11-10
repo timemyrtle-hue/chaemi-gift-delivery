@@ -1159,7 +1159,7 @@ function endings() {
   if (n >= N && !store.get('alldone24', false)) { store.set('alldone24', true); celebrated = S.logs[0]; setTimeout(() => sfx('fanfare'), 600); }
   if (n >= N && celebrated !== S.logs[0]) return `<p class="note center">모은 스티커 ${N} / ${N} · 모두 모았어요</p>`;
   return n >= N
-    ? `<div class="alldone"><img src="${IMG.done}" alt="고생하셨습니다 채미"><div class="tn">채미 스티커 ${N}개를 다 모았어요!</div></div>`
+    ? `<div class="alldone"><img src="${IMG.done}" alt="고생하셨습니다 채미"><div class="tn">채미 스티커 ${N}개를 다 모았어요!</div><p>와우, 대단해요! 👍</p></div>`
     : `<p class="note center">모은 스티커 ${n} / ${N} · 다 모으면 특별한 채미가 나와요</p>`;
 }
 function badEnd(kind) {
