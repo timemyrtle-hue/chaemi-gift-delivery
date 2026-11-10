@@ -1151,17 +1151,17 @@ const BAD = {
     text: (n) => `콕, 콕, 콕, 콕, 콕, 콕! 여섯 번이나 찔린 채미는 그만 웃음이 터지고 말았어요. “아하하, 간지러워! 배달은… 조금만 있다가 가자.” 채미와 ${n}${batchim(n) ? '은' : '는'} 눈밭에 앉아 한참을 웃었고, 이름 없는 소포는 가방 속에서 하루를 더 기다렸답니다.`,
     tip: '채미를 여섯 번 빠르게 누르면 나오는 엔딩이에요.' },
 };
-// 엔딩은 모두 9가지: 선물 취향 6 + 배드 엔딩 2 + 숨은 엔딩 1. 다 모으면 '고생하셨습니다' 채미가 나와요
-const ENDINGS = 9;
+// 배달 길에서 받는 장면 스티커(s_) 12가지를 모두 모으면 '고생하셨습니다' 채미가 나와요
+const SCENE_IDS = STICKERS.filter((x) => x.id.startsWith('s_')).map((x) => x.id);
 // 큰 축하 상자는 처음 다 모은 그 결과 화면에서만 한 번 보여요 (도감에 갔다 돌아와도 그 화면에선 그대로)
 let celebrated = null;
 function endings() {
-  const n = TYPE_ORDER.filter((k) => S.found.includes(k)).length + arr(store.get('bads', [])).filter((k) => BAD[k]).length;
-  if (n >= ENDINGS && !store.get('alldone', false)) { store.set('alldone', true); celebrated = S.logs[0]; setTimeout(() => sfx('fanfare'), 600); }
-  if (n >= ENDINGS && celebrated !== S.logs[0]) return `<p class="note center">찾은 엔딩 ${ENDINGS} / ${ENDINGS} · 모든 엔딩을 찾았어요</p>`;
-  return n >= ENDINGS
-    ? `<div class="alldone"><img src="${IMG.done}" alt="고생하셨습니다 채미"><div class="tn">모든 엔딩을 찾았어요!</div><p>선물 취향 6가지, 배드 엔딩 2가지, 숨은 엔딩 1가지를 모두 만났어요.</p></div>`
-    : `<p class="note center">찾은 엔딩 ${n} / ${ENDINGS} · 다 모으면 특별한 채미가 나와요</p>`;
+  const N = SCENE_IDS.length, n = SCENE_IDS.filter((id) => S.have.includes(id)).length;
+  if (n >= N && !store.get('alldone12', false)) { store.set('alldone12', true); celebrated = S.logs[0]; setTimeout(() => sfx('fanfare'), 600); }
+  if (n >= N && celebrated !== S.logs[0]) return `<p class="note center">장면 스티커 ${N} / ${N} · 모두 모았어요</p>`;
+  return n >= N
+    ? `<div class="alldone"><img src="${IMG.done}" alt="고생하셨습니다 채미"><div class="tn">장면 스티커를 다 모았어요!</div><p>배달 길의 장면 스티커 ${N}가지를 모두 모았어요.</p></div>`
+    : `<p class="note center">장면 스티커 ${n} / ${N} · 다 모으면 특별한 채미가 나와요</p>`;
 }
 function badEnd(kind) {
   const B = BAD[kind], txt = B.text(nm()), cur = S.step === 'who' ? -1 : (S.cur || 0);
