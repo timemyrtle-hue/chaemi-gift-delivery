@@ -179,7 +179,11 @@ label.small { font-family: var(--display); font-size: 15px; }
 .res .book .lib { margin-top: 3px; font-size: 11px; }
 .res .rfoot { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-top: 8px; }
 .res .got { flex-wrap: nowrap; gap: 4px; justify-content: flex-start; }
-.res .got img { width: 40px; height: 40px; padding: 2px; border-radius: 10px; }
+.res .got figure { width: auto; }
+.res .got img { width: 40px; height: 40px; padding: 2px; border-radius: 10px; display: block; }
+.res .got .is-new img { border-color: var(--red); box-shadow: 0 0 0 2px #ffd3cf; }
+.res .got .new { top: -7px; right: -5px; font-size: 9.5px; padding: 0 4px; line-height: 14px; border: 1.5px solid var(--line); animation: newPop .5s .2s backwards; }
+@keyframes newPop { from { transform: scale(0); } 60% { transform: scale(1.3); } }
 .res .rfoot small { font-family: var(--display); color: var(--muted); font-size: 13px; white-space: nowrap; }
 .res .rbtns { display: flex; gap: 8px; }
 @media (max-height: 680px) { .res .book .bt { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; } .res .rhead img { width: 54px; height: 54px; } .res .rhead .tn { font-size: 21px; } .res .cover.photo { width: 40px; height: 54px; } .res .sec { margin: 6px 0 4px; } .res .got img { width: 34px; height: 34px; } .res .rbtns .btn { padding: 7px; } .sheet { padding-top: 10px; padding-bottom: 10px; } }
@@ -1237,7 +1241,7 @@ function result() {
     ${endings()}
     <div class="sec">소포에 들어 있던 책 <small>${AGES[S.age] || AGES.adult}</small></div>
     <div class="books">${bk.map((b, i) => `<div class="book">${COVER[b[0]] ? `<div class="cover photo"><img src="${COVER[b[0]]}" alt="${esc(b[0])} 표지"></div>` : `<div class="cover" style="background:${COVERS[i]}">${esc(b[0].slice(0, 1))}</div>`}<div class="bi"><div class="bt">${esc(b[0])}</div><div class="ba">${esc(b[1])}${b[2] ? ` · <span class="call">${esc(b[2])}</span>` : ''}</div>${DESC[b[0]] ? `<div class="bd">${esc(DESC[b[0]])}</div>` : ''}${tag(b)}</div></div>`).join('')}</div>
-    <div class="rfoot"><div class="got">${got.map((id) => `<img src="${IMG[id]}" alt="${STICKERS.find((x) => x.id === id).name}">`).join('')}</div>
+    <div class="rfoot"><div class="got">${got.map((id) => { const nw = S.fresh.includes(id); return `<figure class="${nw ? 'is-new' : ''}"><img src="${IMG[id]}" alt="${STICKERS.find((x) => x.id === id).name}${nw ? ' (새 스티커)' : ''}">${nw ? '<span class="new">NEW</span>' : ''}</figure>`; }).join('')}</div>
       <small>도감 ${S.have.length}/${STICKERS.length}</small></div>
     <div class="rbtns"><button class="btn" id="again">또 배달하기</button><button class="btn ghost" id="openBook">${UI_BOOK} 도감 · 일지</button></div>
   </div>`;
