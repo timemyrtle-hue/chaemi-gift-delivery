@@ -190,6 +190,7 @@ label.small { font-family: var(--display); font-size: 15px; }
 .res .rbtns .btn { margin-top: 8px; padding: 9px; font-size: 17px; }
 .res .alldone { display: grid; grid-template-columns: 56px 1fr; column-gap: 10px; align-items: center; text-align: left; padding: 6px 10px; margin: 8px 0 0; }
 .res .alldone img { grid-row: span 2; }
+.res .alldone .tn:last-child { grid-row: span 2; }
 .res .alldone img { max-height: 56px; max-width: 56px; }
 .res .alldone .tn { font-size: 17px; margin: 0; }
 .res .alldone p { font-size: 12px; margin: 0; }
@@ -1160,7 +1161,7 @@ function endings() {
   if (n >= N && !store.get('alldone12', false)) { store.set('alldone12', true); celebrated = S.logs[0]; setTimeout(() => sfx('fanfare'), 600); }
   if (n >= N && celebrated !== S.logs[0]) return `<p class="note center">장면 스티커 ${N} / ${N} · 모두 모았어요</p>`;
   return n >= N
-    ? `<div class="alldone"><img src="${IMG.done}" alt="고생하셨습니다 채미"><div class="tn">채미 스티커 ${N}개를 다 모았어요!</div><p>배달 길의 장면 스티커 ${N}가지를 모두 모았어요.</p></div>`
+    ? `<div class="alldone"><img src="${IMG.done}" alt="고생하셨습니다 채미"><div class="tn">채미 스티커 ${N}개를 다 모았어요!</div></div>`
     : `<p class="note center">장면 스티커 ${n} / ${N} · 다 모으면 특별한 채미가 나와요</p>`;
 }
 function badEnd(kind) {
