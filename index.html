@@ -720,20 +720,34 @@ function wink() {
 }
 hero.addEventListener('click', (e) => {
   const now = performance.now(); pokes = now - pokeAt > FAST ? 1 : pokes + 1; pokeAt = now;
-  const shy = pokes >= 6;
-  if (shy) pokes = 0;
+  // 여섯 번 콕콕은 딱 한 번만: 숨은 엔딩·스티커를 받고 나면 그다음부터는 그냥 평소처럼 반응해요
+  const shy = pokes >= 6 && !arr(store.get('bads', [])).includes('tickle');
+  if (pokes >= 6) pokes = 0;
   if (S.step === 'title') {
     sfx('tap');
-    if (shy) { clearTimeout(winkT); shyUntil = now + 1800; setHero('h_shy', 'pop'); award('h_shy'); setTimeout(() => { if (S.step === 'title') setHero('hold'); }, 1800); }
+    if (shy) { clearTimeout(winkT); shyUntil = now + 1800; tickle(); setTimeout(() => { if (S.step === 'title') setHero('hold'); }, 1800); }
     else if (now < shyUntil) return;
     else if (onEye(e)) wink();
     else { setHero('hold', 'pop'); swingTag(); }
     return;
   }
   if ((S.step !== 'scene' && S.step !== 'who') || !sheet.hidden || $('#drift')) return;   // 눈 털기 중에는 세지 않아요
-  if (shy) { clearTimeout(winkT); setHero('h_shy', 'pop'); award('h_shy'); setTimeout(() => badEnd('tickle'), 700); return; }
+  if (shy) {   // 배달을 멈추거나 앞 장면으로 돌려보내지 않고, 잠깐 웃고 그 자리에서 이어 가요
+    clearTimeout(winkT); const back = heroKey; shyUntil = now + 1800; tickle(); say('아하하, 간지러워! 이제 그만~ 배달 마저 하자!');
+    setTimeout(() => { if (heroKey === 'h_shy') { setHero(back === 'h_wink' ? 'wave' : back); say(); } }, 1800); return;
+  }
+  if (now < shyUntil) return;
   if (onEye(e)) wink();
 });
+
+// 숨은 엔딩 '간지럼쟁이 채미': 엔딩과 일지에 남기고 스티커를 주지만 화면은 넘기지 않아요 (한 번만)
+function tickle() {
+  setHero('h_shy', 'pop'); sfx('giggle'); award('h_shy');
+  const bads = arr(store.get('bads', [])); if (bads.includes('tickle')) return;
+  bads.push('tickle'); store.set('bads', bads);
+  const B = BAD.tickle;
+  S.logs.unshift({ d: new Date().toLocaleDateString('ko-KR'), t: B.label + ' · ' + B.title, s: B.text(nm()) }); S.logs = S.logs.slice(0, 20); store.set('logs', S.logs);
+}
 
 function title() {
   S.step = 'title'; clearProps(); dots(0); setWorld('start'); sheet.hidden = true;
@@ -1133,7 +1147,7 @@ const BAD = {
     tip: '막대가 끝까지 찰 때까지 손을 떼지 말고 꾹 눌러 주세요.' },
   tickle: { label: '숨은 엔딩', title: '간지럼쟁이 채미', img: 'h_shy', backLabel: '배달 이어서 하기',
     text: (n) => `콕, 콕, 콕, 콕, 콕, 콕! 여섯 번이나 찔린 채미는 그만 웃음이 터지고 말았어요. “아하하, 간지러워! 배달은… 조금만 있다가 가자.” 채미와 ${n}${batchim(n) ? '은' : '는'} 눈밭에 앉아 한참을 웃었고, 이름 없는 소포는 가방 속에서 하루를 더 기다렸답니다.`,
-    tip: '배달 중에 채미를 여섯 번 빠르게 누르면 나오는 엔딩이에요.' },
+    tip: '채미를 여섯 번 빠르게 누르면 나오는 엔딩이에요.' },
 };
 // 엔딩은 모두 9가지: 선물 취향 6 + 배드 엔딩 2 + 숨은 엔딩 1. 다 모으면 '고생하셨습니다' 채미가 나와요
 const ENDINGS = 9;
