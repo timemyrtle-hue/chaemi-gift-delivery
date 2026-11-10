@@ -392,7 +392,7 @@ const STICKERS = [
   { id: 'h_shy', name: '부끄부끄 채미', how: '채미를 여섯 번 빠르게 누르거나 이름을 “채미”라고 적으면', hint: '채미를 아주 빠르게 여러 번 눌러 보면…?', secret: true },
   { id: 'h_carrot', name: '당근 선물 채미', how: '배달을 세 번 끝내면', hint: '배달을 여러 번 끝내 보면…?', secret: true },
   { id: 'h_friends', name: '채미와 친구들', how: '선물 취향 6가지를 모두 찾으면', hint: '선물 취향을 전부 모으면…?', secret: true },
-  { id: 't_EFT', name: '검색왕 채미', how: '세 서가의 책을 모두 배달하면', hint: '유아·어린이, 청소년, 성인 서가를 모두 다녀 보면…?', secret: true },
+  { id: 't_EFT', name: '검색왕 채미', how: '배드 엔딩 두 가지를 모두 보면', hint: '눈보라에 갇히거나 상자를 놓쳐 보면…?', secret: true },
   { id: 't_ERH', name: '최고! 채미', how: '꼬리표 세 가지를 모두 열어 보면', hint: '마지막 상자 세 가지를 모두 열어 보면…?', secret: true },
 ];
 
@@ -1137,6 +1137,8 @@ function holdBox(o) {
   h.addEventListener('keydown', (e) => { if ((e.key === ' ' || e.key === 'Enter') && !done) { e.preventDefault(); done = true; h.classList.add('opened'); openBox(o); } });
   h.addEventListener('contextmenu', (e) => e.preventDefault());
 }
+// 배드 엔딩 두 가지(눈사람·상자)를 모두 보면 '검색왕 채미' 스티커
+const badPrize = () => { const b = arr(store.get('bads', [])); if (b.includes('snow') && b.includes('box')) award('t_EFT'); };
 // 배드 엔딩 2가지: 눈을 안 털면 '눈사람이 된 채미', 상자를 세 번 놓치면 '입을 꾹 다문 상자'
 const BAD = {
   snow: { no: 1, title: '눈사람이 된 채미', img: 'tired', back: 2, backLabel: '눈보라 앞으로 돌아가기',
@@ -1165,6 +1167,7 @@ function badEnd(kind) {
   const B = BAD[kind], txt = B.text(nm()), cur = S.step === 'who' ? -1 : (S.cur || 0);
   S.step = 'bad'; clearProps(); say(); setHero(B.img, kind === 'tickle' ? 'pop' : 'shake'); wind(false); holdSound(null); sfx(kind === 'tickle' ? 'giggle' : 'sad');
   const bads = arr(store.get('bads', [])); if (!bads.includes(kind)) { bads.push(kind); store.set('bads', bads); }
+  badPrize();
   S.logs.unshift({ d: new Date().toLocaleDateString('ko-KR'), t: (B.label || '배드 엔딩') + ' · ' + B.title, s: txt }); S.logs = S.logs.slice(0, 20); store.set('logs', S.logs);
   sheet.hidden = false; sheet.scrollTop = 0;
   sheet.innerHTML = `<div class="paper center bad"><span class="ribbon">${B.label || '배드 엔딩 ' + B.no}</span>
@@ -1200,7 +1203,6 @@ function curate() {
     award('t_' + k);
     if (S.runs >= 3) award('h_carrot');
     if (TYPE_ORDER.every((x) => S.found.includes(x))) award('h_friends');
-    if (ages.length >= 3) award('t_EFT');
     if (moods.length >= 3) award('t_ERH');
   };
   if (reduce) { sheet.hidden = false; prizes(); return result(); }
@@ -1303,7 +1305,7 @@ function paintSnd() {
 paintSnd(); $('#sndBtn').onclick = () => setSound(!AU.on);
 
 // ================= 시작 =================
-counter(); fit(); snowLoop(); title();
+counter(); fit(); snowLoop(); title(); badPrize();   // 예전에 배드 엔딩을 다 본 사람도 스티커를 받아요
 </script>
 </body>
 </html>
