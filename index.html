@@ -1152,17 +1152,17 @@ const BAD = {
     text: (n) => `콕, 콕, 콕, 콕, 콕, 콕! 여섯 번이나 찔린 채미는 그만 웃음이 터지고 말았어요. “아하하, 간지러워! 배달은… 조금만 있다가 가자.” 채미와 ${n}${batchim(n) ? '은' : '는'} 눈밭에 앉아 한참을 웃었고, 이름 없는 소포는 가방 속에서 하루를 더 기다렸답니다.`,
     tip: '채미를 여섯 번 빠르게 누르면 나오는 엔딩이에요.' },
 };
-// 배달 길에서 받는 채미 스티커(s_) 12가지를 모두 모으면 '고생하셨습니다' 채미가 나와요
+// 배달 길에서 받는 장면 스티커(s_) 12가지를 모두 모으면 '고생하셨습니다' 채미가 나와요
 const SCENE_IDS = STICKERS.filter((x) => x.id.startsWith('s_')).map((x) => x.id);
 // 큰 축하 상자는 처음 다 모은 그 결과 화면에서만 한 번 보여요 (도감에 갔다 돌아와도 그 화면에선 그대로)
 let celebrated = null;
 function endings() {
   const N = SCENE_IDS.length, n = SCENE_IDS.filter((id) => S.have.includes(id)).length;
   if (n >= N && !store.get('alldone12', false)) { store.set('alldone12', true); celebrated = S.logs[0]; setTimeout(() => sfx('fanfare'), 600); }
-  if (n >= N && celebrated !== S.logs[0]) return `<p class="note center">채미 스티커 ${N} / ${N} · 모두 모았어요</p>`;
+  if (n >= N && celebrated !== S.logs[0]) return `<p class="note center">장면 스티커 ${N} / ${N} · 모두 모았어요</p>`;
   return n >= N
     ? `<div class="alldone"><img src="${IMG.done}" alt="고생하셨습니다 채미"><div class="tn">채미 스티커 ${N}개를 다 모았어요!</div></div>`
-    : `<p class="note center">채미 스티커 ${n} / ${N} · 다 모으면 특별한 채미가 나와요</p>`;
+    : `<p class="note center">장면 스티커 ${n} / ${N} · 다 모으면 특별한 채미가 나와요</p>`;
 }
 function badEnd(kind) {
   const B = BAD[kind], txt = B.text(nm()), cur = S.step === 'who' ? -1 : (S.cur || 0);
@@ -1270,7 +1270,7 @@ function result() {
 function book(tab = 'sticker') {
   const prevStep = S.step; sheet.hidden = false; sheet.scrollTop = 0;
   const back = () => { if (prevStep === 'result') result(); else sheet.hidden = true; };
-  const groups = [['채미 스티커', STICKERS.slice(0, 12)], ['선물 취향 스티커', STICKERS.slice(12, 18)], ['숨은 스티커', STICKERS.slice(18)]];
+  const groups = [['장면 스티커', STICKERS.slice(0, 12)], ['선물 취향 스티커', STICKERS.slice(12, 18)], ['숨은 스티커', STICKERS.slice(18)]];
   let body = '';
   if (tab === 'sticker') {
     body = groups.map(([g, list]) => `<div class="sec">${g} <small>${list.filter((s) => S.have.includes(s.id)).length} / ${list.length}</small></div>
