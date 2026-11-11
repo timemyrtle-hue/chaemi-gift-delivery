@@ -943,7 +943,8 @@ function wrapGame(done) {
 const IC = (body) => `<svg class="art ic-art" viewBox="0 0 64 64" aria-hidden="true"><g stroke="#2a2233" stroke-linejoin="round" stroke-linecap="round" fill="none">${body}</g></svg>`;
 const giftIc = (box, rib, hi) => IC(`<rect x="12" y="32" width="40" height="25" rx="4" fill="${box}"/><rect x="27" y="32" width="10" height="25" fill="${rib}"/>
   <rect x="7" y="22" width="50" height="12" rx="4" fill="${box}"/><rect x="27" y="22" width="10" height="12" fill="${rib}"/>
-  <path d="M32 22 C23 6 9 11 15 19 C19 23 27 23 32 22z M32 22 C41 6 55 11 49 19 C45 23 37 23 32 22z" fill="${rib}"/><circle cx="32" cy="21" r="4.5" fill="${hi}"/>`);
+  <path d="M32 22 C23 6 9 11 15 19 C19 23 27 23 32 22z M32 22 C41 6 55 11 49 19 C45 23 37 23 32 22z" fill="${rib}"/><circle cx="32" cy="21" r="4.5" fill="${hi}"/>
+  <path d="M37 34 q4 4 7 9" stroke-width="1.6"/><g transform="rotate(-10 52 50)"><rect x="42" y="42" width="19" height="13" rx="2.5" fill="#fffaf0" stroke-width="2"/><circle cx="46" cy="46" r="1.3" fill="#e8d7b8" stroke-width="1.2"/></g>`);
 const ICON = {
   forest: IC(`<rect x="28" y="48" width="8" height="10" fill="#8a5a3c"/><path d="M10 50 L32 24 L54 50z" fill="#2f9e63"/><path d="M17 34 L32 8 L47 34z" fill="#3bb273"/>
     <path d="M25 20 L32 8 L39 20 q-3.5 3 -7 0 q-3.5 3 -7 0z" fill="#fff"/><path d="M4 58 h56"/>`),
@@ -1276,6 +1277,7 @@ function stormGame(done) {
 
 // 4) 마지막 상자: 꾹 누르기
 // 상자 색: 리본 색에 어울리는 상자
+const BOX_TAG = { red: ['따뜻해지고', '싶은 날'], green: ['조용히 생각', '하고 싶은 날'], gold: ['신나고', '싶은 날'] };
 const BOX_COL = { red: ['#fff4dc', '#e2413f', '#ff7a6e'], green: ['#e2413f', '#2f9e63', '#5cc98e'], gold: ['#34406b', '#f5b300', '#ffd966'] };
 function boxSvg(id) {
   const [box, rib, hi] = BOX_COL[id] || BOX_COL.red, L = '#2a2233', dots = id === 'gold'
@@ -1286,7 +1288,11 @@ function boxSvg(id) {
     <ellipse cx="85" cy="150" rx="62" ry="7" fill="rgba(42,34,51,.14)" stroke="none"/>
     <g class="bx-body"><rect x="22" y="78" width="126" height="68" rx="8" fill="${box}"/>${dots}
       <rect x="74" y="78" width="22" height="68" fill="${rib}"/><rect x="22" y="78" width="126" height="68" rx="8" fill="none"/>
-      <path d="M26 86 h118" stroke="rgba(42,34,51,.18)" stroke-width="6"/></g>
+      <path d="M26 86 h118" stroke="rgba(42,34,51,.18)" stroke-width="6"/>
+      <g transform="rotate(-8 132 116)"><path d="M96 84 Q102 92 106 100" fill="none" stroke-width="2.6"/>
+        <rect x="100" y="96" width="72" height="44" rx="7" fill="#fffaf0" stroke-width="3"/><circle cx="107" cy="102.5" r="2.8" fill="#e8d7b8" stroke-width="2"/>
+        <text x="137" y="118" text-anchor="middle" font-family="Jua,sans-serif" font-size="10.5" fill="${L}" stroke="none">${(BOX_TAG[id] || BOX_TAG.red)[0]}</text>
+        <text x="137" y="132" text-anchor="middle" font-family="Jua,sans-serif" font-size="10.5" fill="${L}" stroke="none">${(BOX_TAG[id] || BOX_TAG.red)[1]}</text></g></g>
     <g class="bx-lid"><rect x="12" y="56" width="146" height="26" rx="8" fill="${box}"/>
       <rect x="74" y="56" width="22" height="26" fill="${rib}"/><rect x="12" y="56" width="146" height="26" rx="8" fill="none"/>
       <path d="M85 56 C60 22 30 30 44 50 C52 58 70 58 85 56z M85 56 C110 22 140 30 126 50 C118 58 100 58 85 56z" fill="${rib}"/>
