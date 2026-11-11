@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta name="description" content="외동도서관 책요정 채미와 함께 이름 없는 소포의 주인을 찾는 연말 책 추천 게임">
+<meta name="description" content="외동도서관 책요정 채미와 함께 이름 없는 선물의 주인을 찾는 연말 책 추천 게임">
 <meta name="theme-color" content="#1d2550">
 <meta name="referrer" content="no-referrer">
 <title>채미의 선물 배달 대작전</title>
@@ -205,7 +205,7 @@ label.small { font-family: var(--display); font-size: 15px; }
 .mytype img { width: 92px; height: 92px; object-fit: contain; flex: none; }
 .mytype .tn { font-family: var(--display); font-size: 24px; color: var(--red); line-height: 1.2; margin: 2px 0 6px; }
 .mytype .chip { font-size: 13.5px; }
-/* 소포 뜯기 */
+/* 선물 뜯기 */
 .unwrap { min-height: calc(100% + 40px); margin: -16px -14px -24px; padding: 16px 14px 24px; background: radial-gradient(circle at 50% 42%, #33438c, #141632 75%); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 26px; cursor: pointer; }
 .pkg { position: relative; width: 230px; height: 250px; animation: pkgIn .45s cubic-bezier(.3,1.6,.5,1), pkgShake .5s .95s; }
 .pkg .half { position: absolute; inset: 0; }
@@ -318,7 +318,7 @@ const IMG = {"hold": "data:image/webp;base64,UklGRo6BAABXRUJQVlA4WAoAAAAQAAAApwE
 // ================= 내용 (여기만 고치면 대사·책이 바뀌어요) =================
 // 장면 4개. v: 취향 점수 (A 신나는+ / 차분한-, B 상상+ / 현실-, C 마음+ / 생각-)
 const SCENES = [
-  { eyebrow: '배달 1 · 길 고르기', prompt: '이름 없는 소포를 가방에 넣었어요. 어느 길로 떠날까요?', world: 'start', wrap: true, opts: [
+  { eyebrow: '배달 1 · 길 고르기', prompt: '이름 없는 선물을 가방에 넣었어요. 어느 길로 떠날까요?', world: 'start', wrap: true, opts: [
     { id: 'forest', label: '고요한 숲길', word: '눈 쌓인 고요한 숲길', line: '조용하다. 내 발소리만 들려. 생각하기 좋은 길이야.' },
     { id: 'town', label: '불 켜진 마을 골목', word: '창마다 불이 켜진 마을 골목', line: '창문마다 이야기가 하나씩 들어 있는 것 같아.' },
     { id: 'lake', label: '언 호수 지름길', word: '꽁꽁 언 호수 위 지름길', line: '미끄럽지만 제일 빠른 길이야. 조심조심, 그래도 신난다.' }] },
@@ -330,7 +330,7 @@ const SCENES = [
     { id: 'map', label: '지도를 펼쳐 길을 찾는다', word: '지도를 펼쳐 바람을 피할 길을 찾아냈어요', line: '찾았다. 언덕 뒤로 돌아가면 바람을 피할 수 있어.' },
     { id: 'sing', label: '노래를 부르며 걷는다', word: '노래를 부르며 한 걸음씩 나아갔어요', line: '노래를 부르니까 발이 저절로 나가. 하나도 안 무서워.' },
     { id: 'story', label: '동굴에서 이야기를 짓는다', word: '작은 동굴에 앉아 눈이 그칠 때까지 이야기를 지었어요', line: '기다리는 동안 이야기를 하나 지어 볼까. 옛날 옛날에…' }] },
-  { eyebrow: '배달 4 · 마지막 소포', prompt: '이름 없는 소포 안에 상자가 셋. 오늘의 나에게 필요한 상자를 하나만 골라요.', world: 'night', box: true, opts: [
+  { eyebrow: '배달 4 · 마지막 선물', prompt: '이름 없는 선물 안에 상자가 셋. 오늘의 나에게 필요한 상자를 하나만 골라요.', world: 'night', box: true, opts: [
     { id: 'red', label: '따뜻해지고 싶은 날', word: '‘따뜻해지고 싶은 날’ 꼬리표가 달린 빨간 리본', line: '빨간 리본 상자를 열어 볼게.' },
     { id: 'green', label: '조용히 생각하고 싶은 날', word: '‘조용히 생각하고 싶은 날’ 꼬리표가 달린 초록 리본', line: '초록 리본 상자를 열어 볼게.' },
     { id: 'gold', label: '신나고 싶은 날', word: '‘신나고 싶은 날’ 꼬리표가 달린 금빛 리본', line: '금빛 리본 상자를 열어 볼게.' }] },
@@ -777,8 +777,8 @@ function title() {
   S.step = 'title'; clearProps(); dots(0); setWorld('start'); sheet.hidden = true;
   setHero('hold', 'pop'); say();
   const tc = $('#titlecard'); tc.hidden = false;
-  tc.innerHTML = `<small>외동도서관 캐릭터</small><h1>채미의<br><em>선물 배달 대작전</em></h1><p class="tsub">이 소포의 주인을 찾아 주세요</p>`;
-  // 소포에 매달린 '받는 사람: ?' 꼬리표 (채미 그림 위 소포 오른쪽 아래 모서리에 걸어요)
+  tc.innerHTML = `<small>외동도서관 캐릭터</small><h1>채미의<br><em>선물 배달 대작전</em></h1><p class="tsub">이 선물의 주인을 찾아 주세요</p>`;
+  // 선물에 매달린 '받는 사람: ?' 꼬리표 (채미 그림 위 선물 오른쪽 아래 모서리에 걸어요)
   const tag = document.createElement('div'); tag.className = 'thing'; tag.id = 'ptag';
   tag.innerHTML = `<i></i><span><small>받는 사람</small><b>?</b></span>`; stage.appendChild(tag);
   const place = () => {
@@ -789,7 +789,7 @@ function title() {
   };
   if (hero.complete) place(); hero.addEventListener('load', place, { once: true }); setTimeout(place, 500);
   placeTag = place;
-  P(`<p class="lead">연말 밤, 외동도서관 책요정 채미의 가방에 <b>받는 사람이 적히지 않은 소포</b>가 하나 남았어요. 채미와 함께 책을 배달하며 소포의 주인을 찾아 주세요. 고르는 길마다 <b>채미 스티커</b>가 생겨요.</p>
+  P(`<p class="lead">연말 밤, 외동도서관 책요정 채미의 가방에 <b>받는 사람이 적히지 않은 선물</b>이 하나 남았어요. 채미와 함께 책을 배달하며 선물의 주인을 찾아 주세요. 고르는 길마다 <b>채미 스티커</b>가 생겨요.</p>
      <button class="btn" id="go">배달 떠나기</button>`);
   $('#go').onclick = who;
 }
@@ -820,13 +820,13 @@ function scene(i) {
   const showCards = () => { P(cards()); panel.querySelectorAll('.card').forEach((b) => (b.onclick = () => pick(i, +b.dataset.k))); };
 
   if (s.wrap) {
-    setHero('gift', 'pop'); say(`${esc(nm())}, 마지막 소포가 아직 포장이 안 됐어. 그런데 받는 사람 칸이 비어 있네… 일단 포장부터 도와줄래?`);
+    setHero('gift', 'pop'); say(`${esc(nm())}, 마지막 선물이 아직 포장이 안 됐어. 그런데 받는 사람 칸이 비어 있네… 일단 포장부터 도와줄래?`);
     wrapGame(() => { setHero('front', 'pop'); say('고마워. 쪽지엔 “올해 이 책이 꼭 필요한 사람에게”라고만 적혀 있어. 배달하다 보면 주인을 찾겠지?'); showCards(); });
   } else if (s.storm) {
     setWorld('storm'); setHero('tired', 'shake'); say('눈보라다. 앞이 안 보여… 눈 좀 털어 줄래?');
     stormGame(() => { setHero('think', 'pop'); say('고마워, 살았다. 그런데 눈보라가 아직 그치지 않았어.'); showCards(); });
   } else if (s.box) {
-    setHero('thanks', 'pop'); say(`배달이 끝났어. ${esc(nm())} 덕분이야. 이제 이름 없는 소포만 남았네. 풀어 보니 상자가 세 개야.`); showCards();
+    setHero('thanks', 'pop'); say(`배달이 끝났어. ${esc(nm())} 덕분이야. 이제 이름 없는 선물만 남았네. 풀어 보니 상자가 세 개야.`); showCards();
   } else {
     setHero('right', 'pop'); say('저기 책을 기다리는 친구들이 있어. 누구에게 먼저 갈까?'); showCards();
   }
@@ -850,7 +850,7 @@ function next(i) {
 
 // 1) 포장하기: 문지른 만큼 포장지가 덮여요
 function wrapGame(done) {
-  P(`<div class="eyebrow">배달 준비 · 마지막 소포</div><p class="prompt">포장지 위를 쓱쓱 문질러 소포를 감싸요</p>
+  P(`<div class="eyebrow">배달 준비 · 마지막 선물</div><p class="prompt">포장지 위를 쓱쓱 문질러 선물을 감싸요</p>
      <canvas id="wrapc" aria-label="선물 포장 칸"></canvas><div class="meter"><i id="wm"></i></div><button class="link" id="skip" hidden>그냥 포장하기</button>`);
   const c = $('#wrapc'), x = c.getContext('2d'), d = Math.min(devicePixelRatio || 1, 2);
   const r = c.getBoundingClientRect(); c.width = r.width * d; c.height = r.height * d; x.setTransform(d, 0, 0, d, 0, 0);
@@ -1304,13 +1304,13 @@ const badPrize = () => { const b = arr(store.get('bads', [])); if (b.includes('s
 // 배드 엔딩 2가지: 눈을 안 털면 '눈사람이 된 채미', 상자를 세 번 놓치면 '입을 꾹 다문 상자'
 const BAD = {
   snow: { no: 1, title: '눈사람이 된 채미', img: 'tired', back: 2, backLabel: '눈보라 앞으로 돌아가기',
-    text: (n) => `눈은 그칠 줄 몰랐어요. 아무도 눈을 털어 주지 않자 채미는 그 자리에서 그대로 눈사람이 되고 말았지요. 이름 없는 소포는 봄이 와서 눈이 다 녹은 뒤에야 발견되었어요. 받는 사람 칸은 여전히 비어 있었답니다.`,
+    text: (n) => `눈은 그칠 줄 몰랐어요. 아무도 눈을 털어 주지 않자 채미는 그 자리에서 그대로 눈사람이 되고 말았지요. 이름 없는 선물은 봄이 와서 눈이 다 녹은 뒤에야 발견되었어요. 받는 사람 칸은 여전히 비어 있었답니다.`,
     tip: '눈보라가 몰아치면 화면을 톡톡 눌러 채미의 눈을 털어 주세요.' },
   box: { no: 2, title: '입을 꾹 다문 상자', img: 'think', back: 3, backLabel: '상자 앞으로 돌아가기',
     text: (n) => `뚜껑이 열리려는 순간마다 손이 떨어졌어요. 세 번이나 놀란 상자는 리본을 꽉 조이고 입을 꾹 다물어 버렸지요. 채미와 ${n}${batchim(n) ? '은' : '는'} 밤새 상자 앞에 앉아 생각했어요. “안에 뭐가 들었을까….” 받는 사람 칸의 글자는 끝내 떠오르지 않았답니다.`,
     tip: '막대가 끝까지 찰 때까지 손을 떼지 말고 꾹 눌러 주세요.' },
   tickle: { label: '숨은 엔딩', title: '간지럼쟁이 채미', img: 'h_shy', backLabel: '배달 이어서 하기',
-    text: (n) => `콕, 콕, 콕, 콕, 콕, 콕! 여섯 번이나 찔린 채미는 그만 웃음이 터지고 말았어요. “아하하, 간지러워! 배달은… 조금만 있다가 가자.” 채미와 ${n}${batchim(n) ? '은' : '는'} 눈밭에 앉아 한참을 웃었고, 이름 없는 소포는 가방 속에서 하루를 더 기다렸답니다.`,
+    text: (n) => `콕, 콕, 콕, 콕, 콕, 콕! 여섯 번이나 찔린 채미는 그만 웃음이 터지고 말았어요. “아하하, 간지러워! 배달은… 조금만 있다가 가자.” 채미와 ${n}${batchim(n) ? '은' : '는'} 눈밭에 앉아 한참을 웃었고, 이름 없는 선물은 가방 속에서 하루를 더 기다렸답니다.`,
     tip: '채미를 여섯 번 빠르게 누르면 나오는 엔딩이에요.' },
 };
 // 스티커 24가지를 모두 모으면 '고생하셨습니다' 채미가 나와요
@@ -1370,7 +1370,7 @@ function curate() {
   unwrap(T, () => { prizes(); result(); });
 }
 
-// 소포 뜯기: 받는 사람 칸에 이름이 떠오르고 → 포장지가 찢어지고 → 책 세 권이 솟아올라요
+// 선물 뜯기: 받는 사람 칸에 이름이 떠오르고 → 포장지가 찢어지고 → 책 세 권이 솟아올라요
 function unwrap(T, done) {
   const covers = (T[S.age] || T.adult).slice(0, 3).map((b) => COVER[b[0]]).filter(Boolean);
   const pkg = `<svg viewBox="0 0 230 250" aria-hidden="true"><g stroke="#2a2233" stroke-width="5" stroke-linejoin="round" stroke-linecap="round">
@@ -1382,14 +1382,14 @@ function unwrap(T, done) {
   const scraps = Array.from({ length: 12 }, (_, i) => { const a = (i / 12) * Math.PI * 2 + Math.random() * 0.4, d = 110 + Math.random() * 70;
     return `<i style="--x:${Math.round(Math.cos(a) * d)}px;--y:${Math.round(Math.sin(a) * d - 30)}px;--r:${Math.round(Math.random() * 540 - 270)}deg;background:${['#dcae74', '#e2413f', '#ffd966', '#fff'][i % 4]}"></i>`; }).join('');
   sheet.hidden = false; sheet.scrollTop = 0;
-  sheet.innerHTML = `<div class="unwrap" id="unwrap" role="img" aria-label="${esc(nm())}에게 온 소포가 열리는 중">
+  sheet.innerHTML = `<div class="unwrap" id="unwrap" role="img" aria-label="${esc(nm())}에게 온 선물이 열리는 중">
     <div class="pkg">
       <div class="out">${covers.map((c, i) => `<img class="b${i}" src="${c}" alt="">`).join('')}</div>
       <div class="scraps">${scraps}</div>
       <div class="half l">${pkg}<div class="tag"><small>받는 사람</small><b>${esc(nm())}</b></div></div>
       <div class="half r">${pkg}</div>
     </div>
-    <p class="cap"><span class="c1">받는 사람 칸에 이름이 떠올랐어요</span><span class="c2">${esc(nm())}에게 온 소포예요!</span></p>
+    <p class="cap"><span class="c1">받는 사람 칸에 이름이 떠올랐어요</span><span class="c2">${esc(nm())}에게 온 선물이에요!</span></p>
   </div>`;
   let over = false; const end = () => { if (over) return; over = true; done(); };
   setTimeout(() => { if (!over) sfx('tap'); }, 350);
@@ -1401,7 +1401,7 @@ function unwrap(T, done) {
 
 function story() {
   const [a, b, c, d] = S.picks, T = TYPES[S.type];
-  return `연말 밤, 외동도서관 책요정 채미의 가방에는 받는 사람 칸이 비어 있는 소포가 하나 남아 있었어요. 채미는 ${wa(nm())} 함께 ${eul(a.word)} 따라 길을 나섰어요. 첫 번째 책은 ${b.word}에게 건넸지요. 눈보라가 길을 막았을 때 채미는 ${c.word}. 배달을 모두 마치고 ${d.word} 상자를 열자, 비어 있던 칸에 글자가 떠올랐어요. “${nm()}에게.” ${T.end}`;
+  return `연말 밤, 외동도서관 책요정 채미의 가방에는 받는 사람 칸이 비어 있는 선물이 하나 남아 있었어요. 채미는 ${wa(nm())} 함께 ${eul(a.word)} 따라 길을 나섰어요. 첫 번째 책은 ${b.word}에게 건넸지요. 눈보라가 길을 막았을 때 채미는 ${c.word}. 배달을 모두 마치고 ${d.word} 상자를 열자, 비어 있던 칸에 글자가 떠올랐어요. “${nm()}에게.” ${T.end}`;
 }
 const COVERS = ['#e2413f', '#2f9e63', '#5a6fd8'];
 function result() {
@@ -1416,7 +1416,7 @@ function result() {
     <div class="rhead"><img src="${IMG['t_' + S.type]}" alt="${T.name} 채미"><div>
       <div class="eyebrow">To. ${esc(nm())} · 나의 선물 취향</div><div class="tn">${T.name}</div><div class="rq">“${T.quote}”</div></div></div>
     ${endings()}
-    <div class="sec">소포에 들어 있던 책 <small>${AGES[S.age] || AGES.adult}</small></div>
+    <div class="sec">선물에 들어 있던 책 <small>${AGES[S.age] || AGES.adult}</small></div>
     <div class="books">${bk.map((b, i) => `<div class="book">${COVER[b[0]] ? `<div class="cover photo"><img src="${COVER[b[0]]}" alt="${esc(b[0])} 표지"></div>` : `<div class="cover" style="background:${COVERS[i]}">${esc(b[0].slice(0, 1))}</div>`}<div class="bi"><div class="bt">${esc(b[0])}</div><div class="ba">${esc(b[1])}${b[2] ? ` · <span class="call">${esc(b[2])}</span>` : ''}</div>${DESC[b[0]] ? `<div class="bd">${esc(DESC[b[0]])}</div>` : ''}${tag(b)}</div></div>`).join('')}</div>
     <div class="rfoot"><div class="got">${got.map((id) => { const nw = S.fresh.includes(id); return `<figure class="${nw ? 'is-new' : ''}"><img src="${IMG[id]}" alt="${STICKERS.find((x) => x.id === id).name}${nw ? ' (새 스티커)' : ''}">${nw ? '<span class="new">NEW</span>' : ''}</figure>`; }).join('')}</div>
       <small>도감 ${S.have.length}/${STICKERS.length}</small></div>
