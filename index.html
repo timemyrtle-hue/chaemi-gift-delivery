@@ -1078,9 +1078,9 @@ function giveGame(o) {
 }
 
 // 3) 눈보라: 톡톡 눌러 눈 털기
-// 채미 몸에 눈이 쌓여요: 귀·모자·어깨처럼 위를 향한 곳에 눈이 소복이 얹히고, 발밑부터 눈이 둥글게 차올라
-// 다 쌓이면 채미 얼굴만 쏙 나온 눈사람이 돼요. 얼굴은 절대 덮지 않아요.
-const SNOW_FACE = { x: 0.45, y: 0.47, rx: 0.25, ry: 0.18 };   // 눈보라 장면 그림(tired)에서 얼굴 자리 (그림 크기 비율)
+// 채미 몸에 눈이 쌓여요: 귀·모자·어깨처럼 위를 향한 곳에 눈이 얹히고, 점점 위에서부터 모자·얼굴을 덮어 내려가요.
+// 발밑에서는 눈 더미가 둥글게 차올라, 다 쌓이면 채미가 동글동글한 눈사람(머리 + 몸통)이 돼요.
+const SNOW_HEAD = { x: 0.45, y: 0.32, rx: 0.36, ry: 0.32 };   // 눈보라 장면 그림(tired)에서 머리 자리 (그림 크기 비율)
 const SNOW_PAD = { x: 0.16, top: 0.22 };   // 그림 밖으로 눈이 부풀 여유 (그림 크기 비율)
 function snowPlace(cv) {   // 채미 그림이 실제로 그려진 자리에 캔버스를 맞춰요 (흔들림 애니메이션은 무시)
   const nw = hero.naturalWidth || 1, nh = hero.naturalHeight || 1, ow = hero.offsetWidth, oh = hero.offsetHeight;
@@ -1095,8 +1095,7 @@ function snowPlace(cv) {   // 채미 그림이 실제로 그려진 자리에 캔
 function snowLevel(cv, f) {
   f = Math.max(0, Math.min(1, f));
   const W = cv.width, H = cv.height, w = cv._w, h = cv._h, ox = cv._ox, oy = cv._oy;
-  const fx = ox + w * SNOW_FACE.x, fy = oy + h * SNOW_FACE.y, frx = w * SNOW_FACE.rx, fry = h * SNOW_FACE.ry;
-  const inFace = (x, y) => ((x - fx) / frx) ** 2 + ((y - fy) / fry) ** 2 < 1;
+  const hx = ox + w * SNOW_HEAD.x, hy = oy + h * SNOW_HEAD.y, hrx = w * SNOW_HEAD.rx, hry = h * SNOW_HEAD.ry;
   // 채미 몸(가장 큰 덩어리)만 읽어요 — 땀방울·먼지 같은 작은 그림은 빼고. 그림이 바뀌지 않으면 한 번만
   if (!cv._mask || cv._src !== hero.src) {
     const m = document.createElement('canvas'); m.width = W; m.height = H; const mx = m.getContext('2d');
@@ -1113,26 +1112,38 @@ function snowLevel(cv, f) {
     cv._mask = A; cv._src = hero.src;
   }
   const A = cv._mask;
-  // 1) 위를 향한 면마다 눈이 얹혀요 (위로 cap 만큼 소복이, 아래로 살짝 덮어서 얹힌 느낌)
-  const S = new Uint8ClampedArray(W * H * 4), cap = h * (0.025 + 0.1 * f), sink = h * (0.015 + 0.03 * f);
+  // 1) 위를 향한 면마다 눈이 얹혀요: 위로 cap 만큼 소복이, 아래로 sink 만큼 덮어 내려가요 (많이 쌓이면 모자·얼굴까지)
+  const S = new Uint8ClampedArray(W * H * 4), cap = h * (0.025 + 0.12 * f), sink = h * (0.015 + 0.75 * Math.pow(Math.max(0, f - 0.25), 1.4));
   for (let x = 0; x < W; x++) for (let y = 1; y < H; y++) {
-    if (!A[y * W + x] || A[(y - 1) * W + x] || inFace(x, y)) continue;
+    if (!A[y * W + x] || A[(y - 1) * W + x]) continue;
     for (let k = 1; k <= cap && y - k >= 0 && !A[(y - k) * W + x]; k++) S[((y - k) * W + x) * 4 + 3] = 255;
-    for (let k = 0; k < sink && y + k < H && A[(y + k) * W + x] && !inFace(x, y + k); k++) S[((y + k) * W + x) * 4 + 3] = 255;
+    for (let k = 0; k < sink && y + k < H && A[(y + k) * W + x]; k++) S[((y + k) * W + x) * 4 + 3] = 255;
   }
   const raw = document.createElement('canvas'); raw.width = W; raw.height = H; raw.getContext('2d').putImageData(new ImageData(S, W, H), 0, 0);
   const sm = document.createElement('canvas'); sm.width = W; sm.height = H; const sx = sm.getContext('2d');
   sx.filter = `blur(${(1.2 + 2.5 * f).toFixed(1)}px)`; sx.drawImage(raw, 0, 0);
   // 2) 발밑부터 눈이 둥글게 차올라요 — 다 차면 턱 밑까지 (눈사람 몸통)
   if (f > 0.02) {
-    const bot = oy + h * 1.03, chin = fy + fry * 0.85, rise = (bot - chin) * f;
+    const bot = oy + h * 1.03, chin = oy + h * 0.62, rise = (bot - chin) * f;
     sx.filter = `blur(${(2 + 3 * f).toFixed(1)}px)`; sx.fillStyle = '#000';
     for (const [cx, rw, rh] of [[0.6, 0.3 + 0.24 * f, 1], [0.32, 0.16 + 0.14 * f, 0.72], [0.86, 0.14 + 0.1 * f, 0.8]]) {
       sx.beginPath(); sx.ellipse(ox + w * cx, bot, w * rw, Math.max(1, rise * rh), 0, 0, 7); sx.fill();
     }
   }
-  const d = sx.getImageData(0, 0, W, H), a = d.data;
-  for (let i = 0; i < a.length; i += 4) { const p = i / 4; a[i + 3] = a[i + 3] > 100 && !inFace(p % W, (p / W) | 0) ? 255 : 0; }
+  // 3) 거의 다 쌓이면 쌓인 눈이 동그란 머리·몸통 두 덩이로 뭉쳐 눈사람이 돼요 (눈 덮인 귀는 남아요)
+  let fin = sm;
+  if (f > 0.6) {
+    const g = Math.min(1, (f - 0.6) / 0.35), rc = document.createElement('canvas'); rc.width = W; rc.height = H; const rx = rc.getContext('2d');
+    rx.globalCompositeOperation = 'lighter';
+    rx.globalAlpha = 1 - g; rx.drawImage(sm, 0, 0);
+    rx.globalAlpha = g; rx.filter = 'blur(3px)'; rx.fillStyle = '#000';
+    rx.beginPath(); rx.ellipse(hx, hy, hrx, hry, 0, 0, 7); rx.fill();
+    rx.beginPath(); rx.ellipse(ox + w * 0.6, oy + h * 0.78, w * 0.42, h * 0.3, 0, 0, 7); rx.fill();
+    rx.filter = 'none'; rx.save(); rx.beginPath(); rx.rect(0, 0, W, oy + h * 0.2); rx.clip(); rx.drawImage(sm, 0, 0); rx.restore();   // 눈 덮인 귀는 그대로 남아 토끼 귀 눈사람
+    fin = rc;
+  }
+  const d = fin.getContext('2d').getImageData(0, 0, W, H), a = d.data;
+  for (let i = 3; i < a.length; i += 4) a[i] = a[i] > 100 ? 255 : 0;
   const x = cv.getContext('2d'); x.putImageData(d, 0, 0);
   x.globalCompositeOperation = 'source-in';
   const gr = x.createLinearGradient(0, 0, 0, H); gr.addColorStop(0, '#ffffff'); gr.addColorStop(1, '#e6eefb'); x.fillStyle = gr; x.fillRect(0, 0, W, H);
