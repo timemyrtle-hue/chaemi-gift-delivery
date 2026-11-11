@@ -191,7 +191,6 @@ label.small { font-family: var(--display); font-size: 15px; }
 .res .rbtns .btn { margin-top: 8px; padding: 9px; font-size: 17px; }
 .res .alldone { display: grid; grid-template-columns: 56px 1fr; column-gap: 10px; align-items: center; text-align: left; padding: 6px 10px; margin: 8px 0 0; }
 .res .alldone img { grid-row: span 2; }
-.res .alldone .tn:last-child { grid-row: span 2; }
 .res .alldone img { max-height: 56px; max-width: 56px; }
 .res .alldone .tn { font-size: 17px; margin: 0; }
 .res .alldone p { font-size: 12px; margin: 0; }
@@ -336,7 +335,7 @@ const SCENES = [
     { id: 'gold', label: '신나고 싶은 날', word: '‘신나고 싶은 날’ 꼬리표가 달린 금빛 리본', line: '금빛 리본 상자를 열어 볼게.' }] },
 ];
 
-// 선물 취향 6가지 = 마지막 꼬리표(mood) × 걸어온 길의 방향(dir). 책은 [제목, 저자, 청구기호, 출처] (출처: '○월' 추천도서 / '신착' / '소장')
+// 선물 취향 6가지 = 마지막 꼬리표(mood) × 걸어온 길의 방향(dir). 책은 [제목, 저자, 청구기호, 출처] (출처: '○월' 추천도서 / '소장')
 const TYPES = {
   EFH: { name: '깜짝 이야기 배달부', mood: 'gold', dir: 'in', sub: '신나고 싶은 날 · 상상 속으로', desc: '마법, 변신, 먼 미래처럼 상상 속 세계로 훌쩍 떠나는 이야기를 좋아해요.', quote: '책장을 넘길 때마다 깜짝 놀라고 싶은 너에게 딱이야!',
     end: '상자 안에는 첫 장부터 깜짝 놀라게 될 이야기들이 들어 있었어요.',
@@ -670,7 +669,7 @@ function drawWorld() {
   sx.fillStyle = '#fff'; sx.fillRect(0, gy, W, H - gy);
   sx.fillStyle = 'rgba(160,180,220,.25)'; sx.fillRect(0, gy, W, 6);
 }
-function setWorld(w) { world = w; wind(w === 'storm'); snowRate = w === 'storm' ? 4 : w === 'lake' ? 0.6 : 1; drawWorld(); }
+function setWorld(w) { world = w; wind(w === 'storm'); snowRate = w === 'lake' ? 0.6 : 1; drawWorld(); }
 function snowLoop() {
   nx.clearRect(0, 0, W, H); fx.clearRect(0, 0, W, H);
   if (world === 'storm') stormSnow();
@@ -1243,7 +1242,7 @@ function stormGame(done) {
   const place = () => {
     if (!dr.isConnected) return removeEventListener('resize', place);
     snowPlace(dr);
-    if (!sim) { sim = dr._sim = snowSim(dr); for (let t = 0; t < PRE; t += 1 / 30) sim.step(1 / 30); }   // 처음부터 눈을 조금 맞은 채로 시작
+    if (!sim) { sim = snowSim(dr); for (let t = 0; t < PRE; t += 1 / 30) sim.step(1 / 30); }   // 처음부터 눈을 조금 맞은 채로 시작
     sim.render();
   };
   if (hero.complete && hero.naturalWidth) place(); else hero.addEventListener('load', place, { once: true });
@@ -1327,14 +1326,14 @@ const BAD = {
   box: { no: 2, title: '입을 꾹 다문 상자', img: 'think', back: 3, backLabel: '상자 앞으로 돌아가기',
     text: (n) => `뚜껑이 열리려는 순간마다 손이 떨어졌어요. 세 번이나 놀란 상자는 리본을 꽉 조이고 입을 꾹 다물어 버렸지요. 채미와 ${n}${batchim(n) ? '은' : '는'} 밤새 상자 앞에 앉아 생각했어요. “안에 뭐가 들었을까….” 받는 사람 칸의 글자는 끝내 떠오르지 않았답니다.`,
     tip: '막대가 끝까지 찰 때까지 손을 떼지 말고 꾹 눌러 주세요.' },
-  tickle: { label: '숨은 엔딩', title: '간지럼쟁이 채미', img: 'h_shy', backLabel: '배달 이어서 하기',
-    text: (n) => `콕, 콕, 콕, 콕, 콕, 콕! 여섯 번이나 찔린 채미는 그만 웃음이 터지고 말았어요. “아하하, 간지러워! 배달은… 조금만 있다가 가자.” 채미와 ${n}${batchim(n) ? '은' : '는'} 눈밭에 앉아 한참을 웃었고, 이름 없는 선물은 가방 속에서 하루를 더 기다렸답니다.`,
-    tip: '채미를 여섯 번 빠르게 누르면 나오는 엔딩이에요.' },
+  // 숨은 엔딩은 화면을 띄우지 않고 배달 일지에만 남아요 (tickle() 참고)
+  tickle: { label: '숨은 엔딩', title: '간지럼쟁이 채미',
+    text: (n) => `콕, 콕, 콕, 콕, 콕, 콕! 여섯 번이나 찔린 채미는 그만 웃음이 터지고 말았어요. “아하하, 간지러워! 배달은… 조금만 있다가 가자.” 채미와 ${n}${batchim(n) ? '은' : '는'} 눈밭에 앉아 한참을 웃었고, 이름 없는 선물은 가방 속에서 하루를 더 기다렸답니다.`, },
 };
 // 스티커 24가지를 모두 모으면 '고생하셨습니다' 채미가 나와요
 // 큰 축하 상자는 처음 다 모은 그 결과 화면에서만 한 번 보여요 (도감에 갔다 돌아와도 그 화면에선 그대로)
 let celebrated = null;
-function endings() {
+function stickerGoal() {   // 스티커 모은 수와 24개를 다 모았을 때의 축하 상자
   const N = STICKERS.length, n = STICKERS.filter((x) => S.have.includes(x.id)).length;
   if (n >= N && !store.get('alldone24', false)) { store.set('alldone24', true); celebrated = S.logs[0]; setTimeout(() => sfx('fanfare'), 600); }
   if (n >= N && celebrated !== S.logs[0]) return `<p class="note center">모은 스티커 ${N} / ${N} · 모두 모았어요</p>`;
@@ -1343,19 +1342,19 @@ function endings() {
     : `<p class="note center">모은 스티커 ${n} / ${N} · 다 모으면 특별한 채미가 나와요</p>`;
 }
 function badEnd(kind) {
-  const B = BAD[kind], txt = B.text(nm()), cur = S.step === 'who' ? -1 : (S.cur || 0);
-  S.step = 'bad'; clearProps(); say(); setHero(B.img, kind === 'tickle' ? 'pop' : 'shake'); wind(false); holdSound(null); sfx(kind === 'tickle' ? 'giggle' : 'sad');
+  const B = BAD[kind], txt = B.text(nm());
+  S.step = 'bad'; clearProps(); say(); setHero(B.img, 'shake'); wind(false); holdSound(null); sfx('sad');
   const bads = arr(store.get('bads', [])); if (!bads.includes(kind)) { bads.push(kind); store.set('bads', bads); }
   badPrize();
-  S.logs.unshift({ d: new Date().toLocaleDateString('ko-KR'), t: (B.label || '배드 엔딩') + ' · ' + B.title, s: txt }); S.logs = S.logs.slice(0, 20); store.set('logs', S.logs);
+  S.logs.unshift({ d: new Date().toLocaleDateString('ko-KR'), t: '배드 엔딩 · ' + B.title, s: txt }); S.logs = S.logs.slice(0, 20); store.set('logs', S.logs);
   sheet.hidden = false; sheet.scrollTop = 0;
-  sheet.innerHTML = `<div class="paper center bad"><span class="ribbon">${B.label || '배드 엔딩 ' + B.no}</span>
-    <img class="big" src="${IMG[B.img]}" alt="" style="margin-top:10px;${kind === 'tickle' ? '' : 'filter:grayscale(.35)'}"><p class="tname">${B.title}</p>
+  sheet.innerHTML = `<div class="paper center bad"><span class="ribbon">배드 엔딩 ${B.no}</span>
+    <img class="big" src="${IMG[B.img]}" alt="" style="margin-top:10px;filter:grayscale(.35)"><p class="tname">${B.title}</p>
     <p class="story" style="text-align:left">${esc(txt)}</p>
     <div class="quote">${B.tip}</div>
-    ${endings()}
+    ${stickerGoal()}
     <button class="btn" id="retry">${B.backLabel}</button><button class="btn ghost" id="home">처음으로</button></div>`;
-  $('#retry').onclick = () => { sheet.hidden = true; const to = B.back !== undefined ? B.back : cur; if (to < 0) who(); else scene(to); };
+  $('#retry').onclick = () => { sheet.hidden = true; scene(B.back); };
   $('#home').onclick = () => { sheet.hidden = true; title(); };
 }
 function openBox(o) {
@@ -1376,7 +1375,6 @@ function curate() {
   if (!S.found.includes(k)) { S.found.push(k); store.set('found', S.found); }
   S.runs++; store.set('runs', S.runs);
   S.logs.unshift({ d: new Date().toLocaleDateString('ko-KR'), t: T.name, s: story() }); S.logs = S.logs.slice(0, 20); store.set('logs', S.logs);
-  const ages = arr(store.get('ages', [])); if (!ages.includes(S.age)) { ages.push(S.age); store.set('ages', ages); }
   const moods = arr(store.get('moods', [])); if (!moods.includes(T.mood)) { moods.push(T.mood); store.set('moods', moods); }
   const prizes = () => {
     award('t_' + k);
@@ -1429,11 +1427,11 @@ function result() {
   const got = S.picks.map((o) => 's_' + o.id).concat('t_' + S.type);
   sheet.scrollTop = 0;
   // 한 화면에 들어오게: 취향 카드 → 책 세 권 → 받은 스티커 → 버튼 (배달 일지는 도감의 '배달 일지' 탭에 남아요)
-  const tag = (b) => b[3] === '신착' ? '<span class="lib new">새로 들어온 책</span>' : b[3] === '소장' ? '<span class="lib new">소장 도서</span>' : b[3] ? `<span class="lib">${b[3]} 추천도서</span>` : '<span class="lib ex">예시 도서</span>';
+  const tag = (b) => b[3] === '소장' ? '<span class="lib new">소장 도서</span>' : b[3] ? `<span class="lib">${b[3]} 추천도서</span>` : '<span class="lib ex">예시 도서</span>';
   sheet.innerHTML = `<div class="paper res">
     <div class="rhead"><img src="${IMG['t_' + S.type]}" alt="${T.name} 채미"><div>
       <div class="eyebrow">To. ${esc(nm())} · 나의 선물 취향</div><div class="tn">${T.name}</div><div class="rq">“${T.quote}”</div></div></div>
-    ${endings()}
+    ${stickerGoal()}
     <div class="sec">선물에 들어 있던 책 <small>${AGES[S.age] || AGES.adult}</small></div>
     <div class="books">${bk.map((b, i) => `<div class="book">${COVER[b[0]] ? `<div class="cover photo"><img src="${COVER[b[0]]}" alt="${esc(b[0])} 표지"></div>` : `<div class="cover" style="background:${COVERS[i]}">${esc(b[0].slice(0, 1))}</div>`}<div class="bi"><div class="bt">${esc(b[0])}</div><div class="ba">${esc(b[1])}${b[2] ? ` · <span class="call">${esc(b[2])}</span>` : ''}</div>${DESC[b[0]] ? `<div class="bd">${esc(DESC[b[0]])}</div>` : ''}${tag(b)}</div></div>`).join('')}</div>
     <div class="rfoot"><div class="got">${got.map((id) => { const nw = S.fresh.includes(id); return `<figure class="${nw ? 'is-new' : ''}"><img src="${IMG[id]}" alt="${STICKERS.find((x) => x.id === id).name}${nw ? ' (새 스티커)' : ''}">${nw ? '<span class="new">NEW</span>' : ''}</figure>`; }).join('')}</div>
